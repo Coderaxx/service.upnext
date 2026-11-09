@@ -1,28 +1,13 @@
 # -*- coding: utf-8 -*-
 # GNU General Public License v2.0 (see COPYING or https://www.gnu.org/licenses/gpl-2.0.txt)
 
-from time import monotonic
-from xbmc import executebuiltin, getCondVisibility
-from xbmcgui import ControlButton, getCurrentWindowDialogId
 from popup import Popup
-from utils import get_setting_bool, jsonrpc, localize
-
-ACTION_SHOW_OSD = 24
-ACTION_MOVE_LEFT = 1
-ACTION_MOVE_RIGHT = 2
-ACTION_MOVE_UP = 3
-ACTION_MOVE_DOWN = 4
-ACTION_CONTEXT_MENU = 117
+from utils import get_setting_bool, localize
 
 
 class UpNext(Popup):
     watchnow = False
     auto_advance = False
-    playback_control = None
-    playback_dialog_id = None
-    controls_pending = False
-    controls_seen = False
-    controls_check_at = 0
 
     def onInit(self):  # pylint: disable=invalid-name
         super().onInit()
@@ -30,96 +15,12 @@ class UpNext(Popup):
             self.getControl(3013).setLabel(localize(30033))  # Stop
         else:
             self.getControl(3013).setLabel(localize(30034))  # Close
-        self.playback_dialog_id = getCurrentWindowDialogId()
-        if get_setting_bool('selectOpensPlaybackControls'):
-            if self.playback_control is None:
-                self.prepare_playback_controls()
-            else:
-                self.setFocus(self.playback_control)
-
-    def prepare_playback_controls(self):
-        """Let Select open the player until navigation enters the popup buttons."""
-        # A neutral focus target works with existing skin overrides too. It adds
-        # no visible button and leaves every existing button's action unchanged.
-        self.playback_control = ControlButton(
-            -1000, -1000, 1, 1, '', focusTexture='', noFocusTexture='')
-        self.addControl(self.playback_control)
-        try:
-            target = self.getControl(20)  # Default skin's visible button group.
-        except RuntimeError:
-            target = self.getControl(3012)  # Skins with a direct Watch now button.
-        if get_setting_bool('seekWithArrows'):
-            self.playback_control.setNavigation(*(self.playback_control,) * 4)
-        else:
-            self.playback_control.setNavigation(target, target, target, target)
-        self.setFocus(self.playback_control)
-
-    def open_playback_controls(self):
-        # The native OSD takes input while the next-episode popup stays visible.
-        # Returning from the OSD restores the popup without cancelling playback.
-        self.controls_pending = True
-        self.controls_seen = False
-        self.controls_check_at = 0
-        executebuiltin('ActivateWindow(videoosd)')
-
-    def restore_after_playback_controls(self):
-        """Restore a hidden popup after Kodi closes the playback controls."""
-        if (not self.controls_pending or not self.playback_dialog_id or self.is_cancel()
-                or self.is_watch_now() or self.is_auto_advance()):
-            return
-        now = monotonic()
-        if now < self.controls_check_at:
-            return
-        if getCondVisibility('Window.IsVisible(videoosd)'):
-            self.controls_seen = True
-            self.controls_check_at = now + .5
-        elif self.controls_seen:
-            self.controls_pending = False
-            if not getCondVisibility('Window.IsVisible(%d)' % self.playback_dialog_id):
-                self.show()
-
-    def onClick(self, controlId):  # pylint: disable=invalid-name
-        if self.playback_control is not None and controlId == self.playback_control.getId():
-            self.open_playback_controls()
-        else:
-            super().onClick(controlId)
-
-    def onAction(self, action):  # pylint: disable=invalid-name
-        if action == ACTION_SHOW_OSD:
-            self.open_playback_controls()
-        elif self.playback_control is not None and get_setting_bool('seekWithArrows'):
-            neutral = self.getFocusId() == self.playback_control.getId()
-            directions = {ACTION_MOVE_LEFT: 'smallbackward', ACTION_MOVE_RIGHT: 'smallforward',
-                          ACTION_MOVE_UP: 'bigforward', ACTION_MOVE_DOWN: 'bigbackward'}
-            if action == ACTION_CONTEXT_MENU:
-                if neutral:
-                    try:
-                        self.setFocus(self.getControl(20))
-                    except RuntimeError:
-                        self.setFocus(self.getControl(3012))
-                else:
-                    self.setFocus(self.playback_control)
-            elif neutral and any(action == direction for direction in directions):
-                direction = next(command for direction, command in directions.items() if action == direction)
-                players = jsonrpc(method='Player.GetActivePlayers').get('result') or []
-                player = next((item for item in players if item.get('type') == 'video'), None)
-                if player is not None:
-                    jsonrpc(method='Player.Seek', params={'playerid': player['playerid'], 'value': {'step': direction}})
-            else:
-                super().onAction(action)
-        elif (action == ACTION_MOVE_UP and self.playback_control is not None
-              and self.getFocusId() != self.playback_control.getId()):
-            # Return from the horizontal Next/Close buttons to the neutral
-            # target so Select can open playback controls again.
-            self.setFocus(self.playback_control)
-        else:
-            super().onAction(action)
 
     def set_credits_countdown(self, remaining=None):
         self.setProperty('credits_countdown', 'true' if remaining is not None else '')
         self.setProperty('credits_remaining', str(remaining) if remaining is not None else '')
         if remaining is not None:
-            self.set_remaining(remaining)
+            self.setProperty('remaining', '%02d' % remaining)
 
     def set_watch_now(self, watchnow):
         self.watchnow = watchnow

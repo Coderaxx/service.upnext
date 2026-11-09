@@ -110,24 +110,24 @@ msgctxt "#30053"
 msgid "Skip recap"
 msgstr ""
 
-msgctxt "#30054"
-msgid "Up next in [COLOR FFFF4081]$INFO[Window.Property(remaining_time)][/COLOR]"
-msgstr ""
-
-msgctxt "#30055"
-msgid "Next episode in [COLOR FFFF4081]$INFO[Window.Property(remaining_time)][/COLOR]"
-msgstr ""
-
-msgctxt "#30056"
-msgid "Continue watching in [COLOR FFFF4081]$INFO[Window.Property(remaining_time)][/COLOR]"
-msgstr ""
-
 msgctxt "#30060"
 msgid "[B]UP NEXT DEMO MODE ENABLED[/B]"
 msgstr ""
 
 msgctxt "#30061"
 msgid "[I]Episodes automatically skip to end.[/I]"
+msgstr ""
+
+msgctxt "#30063"
+msgid "Are you still watching?"
+msgstr ""
+
+msgctxt "#30065"
+msgid "Exit"
+msgstr ""
+
+msgctxt "#30067"
+msgid "Playback stops in [COLOR FFFF4081]$INFO[Window.Property(remaining)][/COLOR] seconds"
 msgstr ""
 
 
@@ -146,14 +146,6 @@ msgstr ""
 
 msgctxt "#30505"
 msgid "Show a \"Stop\" button instead of a \"Close\" button"
-msgstr ""
-
-msgctxt "#30507"
-msgid "Use OK/Select for playback controls"
-msgstr ""
-
-msgctxt "#30508"
-msgid "Use arrows to seek; hold OK for Up Next buttons"
 msgstr ""
 
 msgctxt "#30600"
@@ -228,32 +220,40 @@ msgctxt "#30633"
 msgid "Skip recaps automatically"
 msgstr ""
 
-msgctxt "#30635"
-msgid "Ask if still watching after (minutes, 0 disables)"
-msgstr ""
-
 msgctxt "#30637"
-msgid "Ask if still watching after bedtime"
+msgid "Stop playback after this many seconds without an answer"
 msgstr ""
 
 msgctxt "#30639"
-msgid "Bedtime hour"
+msgid "Countdown in seconds before the next episode starts  [COLOR gray]0 = until the episode ends[/COLOR]"
 msgstr ""
 
 msgctxt "#30641"
-msgid "Bedtime minute"
+msgid "Chapter markers"
 msgstr ""
 
 msgctxt "#30643"
-msgid "Mark an episode as watched when moving to the next one early"
+msgid "Use chapter markers to detect the credits  [COLOR gray]otherwise the times above are used[/COLOR]"
 msgstr ""
 
 msgctxt "#30645"
-msgid "Continue a partly watched next episode where it was left"
+msgid "Chapter names that mean the credits  [COLOR gray]comma separated[/COLOR]"
 msgstr ""
 
 msgctxt "#30647"
-msgid "Pause the video while an add-on starts the next episode"
+msgid "Continue with the next season when a season ends"
+msgstr ""
+
+msgctxt "#30651"
+msgid "Credits file next to the video"
+msgstr ""
+
+msgctxt "#30653"
+msgid "Use <video name>.skipcredits.json when it exists  [COLOR gray]first choice, over chapters and the times above[/COLOR]"
+msgstr ""
+
+msgctxt "#30649"
+msgid "Full-screen \"Are you still watching?\"  [COLOR gray]pauses playback and stops it when nobody answers[/COLOR]"
 msgstr ""
 
 msgctxt "#30700"
@@ -298,4 +298,12 @@ msgstr ""
 
 msgctxt "#30813"
 msgid "Test Skip button"
+msgstr ""
+
+msgctxt "#30815"
+msgid "Show a full-screen StillWatching pop-up…"
+msgstr ""
+
+msgctxt "#30817"
+msgid "Show a full-screen StillWatchingSimple pop-up…"
 msgstr ""

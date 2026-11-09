@@ -4,22 +4,17 @@
 from copy import deepcopy
 from traceback import format_exc
 from xbmc import Monitor
-from api import Api
+from api import Api, credits_chapter
 from playbackmanager import PlaybackManager
 from player import UpNextPlayer
+from popup import close_leftover_popups
+from sidecar import load_credits_start
 from skip import Skipper
-from utils import clear_property, decode_json, get_property, get_setting_bool, get_setting_int, log as ulog, reload_settings
-
-
-# How long to wait for a new file's own timing before accepting what Kodi reports (seconds)
-STALE_TIMING_WAIT = 10
+from utils import clear_property, decode_json, get_property, get_setting_bool, log as ulog
 
 
 class UpNextMonitor(Monitor):
     """Service monitor for Kodi"""
-    _timing = None  # (file, total time, play time) last seen while tracking
-    _stale_waits = 0
-    _handled_without_data = None  # file marked as handled before any add-on data arrived
 
     def __init__(self):
         """Constructor for Monitor"""
@@ -32,6 +27,8 @@ class UpNextMonitor(Monitor):
         self._wake_retries = 0
         self._playback_state = None
         self._waiting_for = None
+        self._sidecar_file = None
+        self._sidecar_start = None
 
     def log(self, msg, level=1):
         """Log wrapper"""
@@ -47,15 +44,12 @@ class UpNextMonitor(Monitor):
                 # Abort was requested while waiting. We should exit
                 break
 
+            close_leftover_popups()
             self.restore_after_wake()
-            self.playback_manager.check_previous_watched()
-            self.playback_manager.resume_next_episode()
             if not self.player.is_tracking():
                 self._waiting_for = None
+                self._sidecar_file = None
                 self.skipper.reset()
-                timer = getattr(self.player.state, 'watch_timer', None)
-                if timer:
-                    timer.suspend()
                 continue
 
             if bool(get_property('PseudoTVRunning') == 'True'):
@@ -112,32 +106,19 @@ class UpNextMonitor(Monitor):
                 self.wait_for_player('player.getTime()')
                 continue
 
-            timer = getattr(self.player.state, 'watch_timer', None)
-            if timer:
-                timer.observe(current_file, play_time, self.player.state.pause)
-                if not self.player.state.pause:
-                    enabled = get_setting_bool('bedtimeEnabled')
-                    timer.mark_bedtime(enabled, (get_setting_int('bedtimeHour') or 0) if enabled else 0,
-                                       (get_setting_int('bedtimeMinute') or 0) if enabled else 0)
-
-            if self.stale_timing(current_file, total_time, play_time):
-                self.wait_for_player("the new file's own position and duration")
-                continue
-
             self._waiting_for = None
             try:
                 self.skipper.update(self.api.data, play_time)
             except Exception:  # pylint: disable=broad-exception-caught
                 # A bad skip_segments payload must not stop the service or the popup
                 self.log('Skip button failed:\n%s' % format_exc(), 0)
-            notification_time = self.api.notification_time(total_time=total_time)
-            if total_time - play_time > notification_time:
+            reason = self.credits_trigger(current_file, play_time, total_time)
+            if not reason:
                 # Media hasn't reach notification time yet, waiting a bit longer...
                 continue
 
             self.player.set_last_file(current_file)
-            had_addon_data = bool(self.api.data)
-            self.log('Show notification as episode (of length %d secs) ends in %d secs' % (total_time, notification_time), 2)
+            self.log('Show notification as %s' % reason, 2)
             # The popup holds this loop until it closes, so the Skip button
             # could no longer follow playback: close it first.
             self.skipper.hide()
@@ -148,8 +129,6 @@ class UpNextMonitor(Monitor):
                 self.log('Up Next failed for %s:\n%s' % (current_file, format_exc()), 0)
                 clear_property('service.upnext.dialog')
                 replaced = False
-            # Only an attempt that showed nothing because the add-on data hadn't arrived yet gets retried
-            self._handled_without_data = None if had_addon_data or self.playback_manager.popup_shown else current_file
             if replaced:
                 # Another file replaced this episode while the popup was open, keep tracking it
                 self.log('Playback was replaced while the popup was open, tracking continues', 2)
@@ -160,32 +139,36 @@ class UpNextMonitor(Monitor):
 
         self.log('Service stopped', 0)
 
-    def stale_timing(self, current_file, total_time, play_time):
-        """Whether Kodi still reports the previous file's position and duration for a new file.
+    def credits_trigger(self, current_file, play_time, total_time):
+        """Why the popup should be shown now, or None when it is not time yet
 
-        Right after another file starts (e.g. an add-on calling Player.play), Kodi can report the
-        new file while its position and duration are still the previous file's, near the end."""
-        if self._timing:
-            filename, previous_total, previous_time = self._timing
-            if filename != current_file and total_time == previous_total and play_time >= previous_time:
-                self._stale_waits += 1
-                if self._stale_waits <= STALE_TIMING_WAIT:
-                    return True
-                # A different file of exactly the same length, resumed further in: accept it
-        self._stale_waits = 0
-        self._timing = (current_file, total_time, play_time)
-        return False
+        In order of priority: the sidecar file of the video, a credits chapter, the times in the settings.
+        When the video has a valid sidecar file, neither the chapters nor the times in the settings are used.
+        """
+        credits_start = self.credits_start_from_file(current_file, total_time)
+        if credits_start is not None:
+            if play_time < credits_start:
+                return None
+            return 'skipcredits.json says the credits start at %d secs, episode ends in %d secs' % (
+                credits_start, total_time - play_time)
 
-    def forget_file_handled_without_data(self):
-        """Give the playing file another look when it was handled before its add-on data arrived"""
-        try:
-            playing_file = self.player.getPlayingFile()
-        except RuntimeError:
-            return
-        if playing_file and playing_file == self._handled_without_data == self.player.get_last_file():
-            self.log('Add-on data arrived for %s after it was handled without it, checking it again' % playing_file, 2)
-            self.player.set_last_file(None)
-        self._handled_without_data = None
+        chapter = credits_chapter(play_time=play_time, total_time=total_time)
+        if chapter:
+            return 'chapter "%s" started, episode ends in %d secs' % (chapter, total_time - play_time)
+
+        notification_time = self.api.notification_time(total_time=total_time)
+        if total_time - play_time > notification_time:
+            return None
+        return 'episode (of length %d secs) ends in %d secs' % (total_time, notification_time)
+
+    def credits_start_from_file(self, current_file, total_time):
+        """When the credits start according to the sidecar file, looked up once for every playback"""
+        if self._sidecar_file != current_file:
+            self._sidecar_file = current_file
+            self._sidecar_start = None
+            if get_setting_bool('useSkipCreditsFile'):
+                self._sidecar_start = load_credits_start(current_file, total_time)
+        return self._sidecar_start
 
     def wait_for_player(self, reason):
         if self._waiting_for != reason:
@@ -211,7 +194,6 @@ class UpNextMonitor(Monitor):
         self._playback_state.update(last_file=self.player.get_last_file(), tracking=self.player.is_tracking(),
                                     played_in_a_row=self.player.state.played_in_a_row,
                                     current_tv_show_id=self.player.state.current_tv_show_id)
-        self._playback_state['watch_timer'] = getattr(self.player.state, 'watch_timer', None)
 
     def remember_for_sleep(self):
         # The queued sleep callback may run after the native player has stopped.
@@ -244,18 +226,11 @@ class UpNextMonitor(Monitor):
             self.api.addon_data_received(saved['data'], encoding=saved['encoding'])
         self.player.state.played_in_a_row = saved['played_in_a_row']
         self.player.state.current_tv_show_id = saved['current_tv_show_id']
-        if saved.get('watch_timer') is not None:
-            self.player.state.watch_timer = saved['watch_timer']
-            self.player.state.watch_timer.suspend()
         self.player.set_last_file(saved['last_file'])
         if saved['tracking'] or saved['data']:
             self.player.enable_tracking()
         self.clear_sleep_state()
         self.log('Restored playback tracking after wake', 2)
-
-    def onSettingsChanged(self):  # pylint: disable=invalid-name
-        """Pick up changed settings on the next read"""
-        reload_settings()
 
     def onNotification(self, sender, method, data):  # pylint: disable=invalid-name
         """Notification event handler for accepting data from add-ons"""
@@ -263,7 +238,6 @@ class UpNextMonitor(Monitor):
             self.remember_for_sleep()
             return
         if method == 'System.OnWake':
-            self.playback_manager.request_popup_wake()
             self._wake_retries = 30 if self._sleep_state else 0
             return
         if method == 'Player.OnStop':
@@ -287,7 +261,6 @@ class UpNextMonitor(Monitor):
         self.playback_manager.handle_demo()
         decoded_data.update(id='%s_play_action' % sender.replace('.SIGNAL', ''))
         self.api.addon_data_received(decoded_data, encoding=encoding)
-        self.forget_file_handled_without_data()
         self.player.enable_tracking()
         self.player.reset_queue()
         self.remember_playback()

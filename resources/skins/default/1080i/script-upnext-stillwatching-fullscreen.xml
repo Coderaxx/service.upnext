@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<window>
+    <defaultcontrol always="true">20</defaultcontrol>
+    <onload>Dialog.Close(fullscreeninfo,true)</onload>
+    <onload>Dialog.Close(videoosd,true)</onload>
+    <controls>
+        <!-- Netflix style full screen "Are you still watching?" -->
+        <control type="group">
+            <visible>!String.IsEqual(Window.Property(closing),true)</visible>
+            <animation type="WindowOpen" reversible="false">
+                <effect type="fade" start="0" end="100" time="400" />
+            </animation>
+            <animation type="WindowClose" reversible="false">
+                <effect type="fade" start="100" end="0" time="300" />
+            </animation>
+            <!-- Backdrop covering the whole screen -->
+            <control type="image">
+                <left>0</left>
+                <top>0</top>
+                <width>100%</width>
+                <height>100%</height>
+                <texture colordiffuse="FF000000">white.jpg</texture>
+            </control>
+            <control type="image">
+                <left>0</left>
+                <top>0</top>
+                <width>100%</width>
+                <height>100%</height>
+                <texture>$INFO[Window.Property(fanart)]</texture>
+                <aspectratio>scale</aspectratio>
+                <colordiffuse>66FFFFFF</colordiffuse>
+                <visible>!String.IsEmpty(Window.Property(fanart))</visible>
+            </control>
+            <control type="image">
+                <left>0</left>
+                <top>0</top>
+                <width>100%</width>
+                <height>100%</height>
+                <texture colordiffuse="CC000000">white.jpg</texture>
+            </control>
+            <!-- Question -->
+            <control type="label">
+                <left>0</left>
+                <top>350</top>
+                <width>1920</width>
+                <height>90</height>
+                <align>center</align>
+                <aligny>center</aligny>
+                <font>font32_title</font>
+                <textcolor>FFFFFFFF</textcolor>
+                <shadowcolor>00000000</shadowcolor>
+                <label>[B]$ADDON[service.upnext 30063][/B]</label>
+            </control>
+            <!-- Show - SxE - Title of the episode that is waiting -->
+            <control type="label">
+                <left>0</left>
+                <top>440</top>
+                <width>1920</width>
+                <height>40</height>
+                <align>center</align>
+                <aligny>center</aligny>
+                <font>font20_title</font>
+                <textcolor>AAFFFFFF</textcolor>
+                <shadowcolor>00000000</shadowcolor>
+                <label>$INFO[Window.Property(tvshowtitle),, - ]$INFO[Window.Property(season),S,]$INFO[Window.Property(episode),E, - ]$INFO[Window.Property(title)]</label>
+            </control>
+            <!-- Buttons -->
+            <control type="grouplist" id="20">
+                <left>0</left>
+                <top>540</top>
+                <width>1920</width>
+                <height>66</height>
+                <orientation>horizontal</orientation>
+                <itemgap>30</itemgap>
+                <align>center</align>
+                <control type="button" id="3012">
+                    <label>$ADDON[service.upnext 30010]</label>
+                    <width>340</width>
+                    <height>66</height>
+                    <font>font20_title</font>
+                    <textcolor>FFFFFFFF</textcolor>
+                    <focusedcolor>FF000000</focusedcolor>
+                    <selectedcolor>FFFFFFFF</selectedcolor>
+                    <shadowcolor>00000000</shadowcolor>
+                    <aligny>center</aligny>
+                    <align>center</align>
+                    <texturefocus border="10" colordiffuse="FFFFFFFF">button.png</texturefocus>
+                    <texturenofocus border="10" colordiffuse="FF333333">button.png</texturenofocus>
+                    <alttexturefocus border="10" colordiffuse="FFFFFFFF">button.png</alttexturefocus>
+                    <alttexturenofocus border="10" colordiffuse="FF333333">button.png</alttexturenofocus>
+                    <pulseonselect>no</pulseonselect>
+                </control>
+                <control type="button" id="3013">
+                    <label>$ADDON[service.upnext 30065]</label>
+                    <width>340</width>
+                    <height>66</height>
+                    <font>font20_title</font>
+                    <textcolor>FFFFFFFF</textcolor>
+                    <focusedcolor>FF000000</focusedcolor>
+                    <selectedcolor>FFFFFFFF</selectedcolor>
+                    <shadowcolor>00000000</shadowcolor>
+                    <aligny>center</aligny>
+                    <align>center</align>
+                    <texturefocus border="10" colordiffuse="FFFFFFFF">button.png</texturefocus>
+                    <texturenofocus border="10" colordiffuse="FF333333">button.png</texturenofocus>
+                    <alttexturefocus border="10" colordiffuse="FFFFFFFF">button.png</alttexturefocus>
+                    <alttexturenofocus border="10" colordiffuse="FF333333">button.png</alttexturenofocus>
+                    <pulseonselect>no</pulseonselect>
+                </control>
+            </control>
+            <!-- Time left to answer -->
+            <control type="progress" id="3014">
+                <left>660</left>
+                <top>650</top>
+                <width>600</width>
+                <height>4</height>
+                <texturebg colordiffuse="33FFFFFF">white.jpg</texturebg>
+                <midtexture colordiffuse="FFFFFFFF">white.jpg</midtexture>
+            </control>
+            <control type="label">
+                <left>0</left>
+                <top>670</top>
+                <width>1920</width>
+                <height>40</height>
+                <align>center</align>
+                <aligny>center</aligny>
+                <font>font20_title</font>
+                <textcolor>AAFFFFFF</textcolor>
+                <shadowcolor>00000000</shadowcolor>
+                <label>$ADDON[service.upnext 30067]</label>
+            </control>
+        </control>
+    </controls>
+</window>

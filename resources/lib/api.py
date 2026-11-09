@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # GNU General Public License v2.0 (see COPYING or https://www.gnu.org/licenses/gpl-2.0.txt)
 
-from xbmc import sleep, PLAYLIST_VIDEO, PLAYLIST_MUSIC
-from utils import event, get_int, get_setting_bool, get_setting_int, jsonrpc, log as ulog
+from xbmc import getInfoLabel, sleep, PLAYLIST_VIDEO, PLAYLIST_MUSIC
+from utils import event, get_int, get_setting, get_setting_bool, get_setting_int, jsonrpc, log as ulog
 
 
 # Episode details shown in the popup
@@ -27,32 +27,59 @@ def credits_autoplay_deadline(data, play_time, total_time):
     return min(total_time, max(play_time, offset) + delay)
 
 
-def get_watched_state(episodeid):
-    """Return (play count, resume position) of a library episode, or None if it isn't in the library"""
-    result = jsonrpc(method='VideoLibrary.GetEpisodeDetails', params={
-        'episodeid': episodeid, 'properties': ['playcount', 'resume'],
-    })
-    details = (result.get('result') or {}).get('episodedetails')
-    if not details:
+def credits_chapter(play_time=None, total_time=None):
+    """Name of the current chapter when it is a credits chapter, otherwise None
+
+    Kodi only exposes the chapter that is playing right now (not the chapter list or their start times),
+    so this can only notice when playback enters a credits chapter, which is exactly when the popup is wanted.
+    """
+    if not get_setting_bool('useChapters'):
         return None
-    return details.get('playcount') or 0, (details.get('resume') or {}).get('position') or 0
 
-
-def playing_episode_id():
-    """Return the library ID of the playing episode, or None if no library episode is playing"""
-    players = jsonrpc(method='Player.GetActivePlayers').get('result') or []
-    video = [player.get('playerid') for player in players if player.get('type') == 'video']
-    if not video:
+    # Opening credits / intro chapters are also called "credits": only look in the second half of the file
+    if not play_time or not total_time or play_time < total_time * 0.5:
         return None
-    item = (jsonrpc(method='Player.GetItem', params={'playerid': video[0]}).get('result') or {}).get('item') or {}
-    return item.get('id') if item.get('type') == 'episode' else None
+
+    try:
+        chapter_count = int(getInfoLabel('Player.ChapterCount') or 0)
+    except ValueError:
+        chapter_count = 0
+    if chapter_count < 2:  # No (useful) chapters in this file, use the length based times
+        return None
+
+    # A credits chapter is never the first one, and not in the first half of the chapters
+    try:
+        chapter_index = int(getInfoLabel('Player.Chapter') or 0)
+    except ValueError:
+        chapter_index = 0
+    if chapter_index and (chapter_index < 2 or chapter_index < chapter_count / 2):
+        return None
+
+    chapter_name = (getInfoLabel('Player.ChapterName') or '').strip()
+    if not chapter_name:
+        return None
+
+    keywords = [keyword.strip().lower() for keyword in (get_setting('chapterKeywords') or '').split(',')]
+    if any(keyword and keyword in chapter_name.lower() for keyword in keywords):
+        return chapter_name
+    return None
 
 
-def mark_watched(episodeid, playcount):
-    """Set a library episode's play count and clear its resume point"""
-    jsonrpc(method='VideoLibrary.SetEpisodeDetails', params={
-        'episodeid': episodeid, 'playcount': playcount, 'resume': {'position': 0, 'total': 0},
-    })
+def countdown_time(total_time=None):
+    """Length in seconds of the Up Next countdown, using the same episode length buckets as notification_time()"""
+    if total_time and get_setting_bool('customAutoPlayTime'):
+        if total_time > 60 * 60:
+            return get_setting_int('autoPlayCountdownXL')
+        if total_time > 40 * 60:
+            return get_setting_int('autoPlayCountdownL')
+        if total_time > 20 * 60:
+            return get_setting_int('autoPlayCountdownM')
+        if total_time > 10 * 60:
+            return get_setting_int('autoPlayCountdownS')
+        return get_setting_int('autoPlayCountdownXS')
+
+    # Use one global default, regardless of episode length
+    return get_setting_int('autoPlayCountdownAll')
 
 
 class Api:
@@ -332,24 +359,36 @@ class Api:
         return episodeid
 
     def find_next_episode(self, result, current_file, include_watched, current_episode_id):
-        found_match = False
-        current_library_file = current_file
         episodes = result.get('result', {}).get('episodes', [])
-        for episode in episodes:
-            # Find position of current episode
-            episode_library_file = episode.get('file')
-            if current_episode_id == episode.get('episodeid'):
-                found_match = True
-                current_library_file = episode_library_file
-                continue
+
+        # Put the episodes in play order (season, then episode) here, rather than relying on how Kodi sorts them
+        episodes = sorted(episodes, key=lambda ep: (get_int(ep, 'season'), get_int(ep, 'episode'), get_int(ep, 'episodeid')))
+
+        current = next((ep for ep in episodes if ep.get('episodeid') == current_episode_id), None)
+        if current is None:
+            self.log('No next episode found, the playing episode (%s) is not in the library' % current_episode_id, 1)
+            return None
+
+        current_season = get_int(current, 'season')
+        current_library_file = current.get('file')
+        next_season_allowed = get_setting_bool('playNextSeason')
+
+        for episode in episodes[episodes.index(current) + 1:]:
+            season = get_int(episode, 'season')
+            if season != current_season and (current_season < 1 or not next_season_allowed):
+                # Season ended. Specials (season 0) never lead into season 1, and the setting can turn
+                # continuing into the next season off
+                self.log('End of season %s, not continuing into season %s' % (current_season, season), 2)
+                break
             # Check if it may be a multi-part episode
-            if episode_library_file in (current_file, current_library_file):
+            if episode.get('file') in (current_file, current_library_file):
                 continue
             # Skip already watched episodes?
             if not include_watched and episode.get('playcount') > 0:
                 continue
-            if found_match:
-                return episode
+            if season != current_season:
+                self.log('End of season %s, next up is the first episode of season %s' % (current_season, season), 2)
+            return episode
 
         # No next episode found
         self.log('No next episode found', 1)

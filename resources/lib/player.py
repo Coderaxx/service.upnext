@@ -1,17 +1,23 @@
 # -*- coding: utf-8 -*-
 # GNU General Public License v2.0 (see COPYING or https://www.gnu.org/licenses/gpl-2.0.txt)
 
-from xbmc import getCondVisibility, Player, PlayList, Monitor
+from xbmc import getCondVisibility, Player, Monitor
 from api import Api
 from state import State
-from utils import get_setting_bool
+
+# Counts started playbacks. A popup compares it with the value it saw when it opened to know that another
+# file started in the meantime, which is more reliable than reading the player's file name and clock
+_PLAYBACK_STARTS = [0]
+
+
+def playback_serial():
+    return _PLAYBACK_STARTS[0]
 
 
 class UpNextPlayer(Player):
     """Service class for playback monitoring"""
     last_file = None
     track = False
-    stop_count = 0  # times the viewer stopped playback, shared by every instance
 
     def __init__(self):
         self.api = Api()
@@ -39,19 +45,9 @@ class UpNextPlayer(Player):
             self.api.reset_queue()
             self.state.queued = False
 
-    def is_trackable(self):
-        """Return True for a library episode, or for any video with a next item in a playlist Up Next follows"""
-        if getCondVisibility('videoplayer.content(episodes)'):
-            return True
-        # Non-library videos (files played from a folder, "Play from here") only have a playlist to go on
-        if not get_setting_bool('enablePlaylist') or not self.isPlayingVideo():
-            return False
-        playlist = PlayList(self.api.get_playlistid(playlistid_cache=[None]))
-        return 0 <= playlist.getposition() < playlist.size() - 1
-
     def _check_video(self):
         self.monitor.waitForAbort(5)
-        if not self.is_trackable():
+        if not getCondVisibility('videoplayer.content(episodes)'):
             return
         self.state.track = True
 
@@ -62,10 +58,12 @@ class UpNextPlayer(Player):
 
         def onPlayBackStarted(self):  # pylint: disable=invalid-name
             """Will be called when kodi starts playing a file"""
+            _PLAYBACK_STARTS[0] += 1
             self.reset_queue()
     else:
         def onPlayBackStarted(self):  # pylint: disable=invalid-name
             """Will be called when kodi starts playing a file"""
+            _PLAYBACK_STARTS[0] += 1
             self.reset_queue()
             self._check_video()
 
@@ -74,12 +72,11 @@ class UpNextPlayer(Player):
 
     def onPlayBackResumed(self):  # pylint: disable=invalid-name
         self.state.pause = False
-        if self.api.has_addon_data() or self.is_trackable():
+        if self.api.has_addon_data() or getCondVisibility('videoplayer.content(episodes)'):
             self.enable_tracking()
 
     def onPlayBackStopped(self):  # pylint: disable=invalid-name
         """Will be called when user stops playing a file"""
-        UpNextPlayer.stop_count += 1
         self.reset_queue()
         self.api.reset_addon_data()
         self.state = State()  # Reset state

@@ -15,13 +15,9 @@ A lot of existing add-ons already integrate with this service out-of-the-box.
 The add-on has various settings to fine-tune the experience, however the default settings should be fine for most.
 
   * Simple or fancy mode (defaults to fancy mode, but a more simple interface is possible)
-  * Optional OK/Select access to playback controls alongside the next-episode popup. Press an arrow first to select Watch now or Close; press Up to return to playback-control focus. If Kodi hides the popup while controls are open, it is restored when the controls close. Normal episode-end advancement remains active.
-  * With the optional arrow-seeking mode enabled, arrows seek the video while playback controls have focus. Use the Context Menu action to switch between playback focus and the popup buttons; on some remotes this is a long press of OK. The default arrow behavior is unchanged when the option is disabled.
   * The notification time can be adjusted (defaults to 30 seconds before the end)
   * A credits delay can advance early when the provider supplies a credits offset (disabled by default). Back cancels the countdown and keeps the current episode playing; Pause freezes it with the video.
   * The default action can be configured, i.e. should it advance to the next episode (default) when the user does not respond, or stop
-  * With "Enable on playlists", videos outside the library (e.g. files started with "Play from here") get the popup for the next playlist item
-  * Library episodes left early with Watch Now or the credits delay are marked as watched (enabled by default)
   * The number of episodes to play automatically before asking the user if they are still there (defaults to 3 episodes)
 
 > NOTE: The add-on settings are found in the Kodi add-ons section, in the *Services* category.
@@ -31,40 +27,6 @@ Credits autoplay uses the provider's absolute `notification_offset`; it does not
 For [Addon Integration](https://github.com/im85288/service.upnext/wiki/Integration) and [Skinners](https://github.com/im85288/service.upnext/wiki/Skinners) see the [wiki](https://github.com/im85288/service.upnext/wiki)
 
 ## Releases
-
-### Unreleased
-- Fix the service failing to start on Xbox (Kodi from the Microsoft Store), reported by @barlafuus83 (@im85288)
-
-### v1.3.6 (2026-11-04)
-- Optionally seek with the arrow keys while the popup is open (with OK/Select playback controls on); the Context Menu action, a long press of OK on some remotes, switches between seeking and the popup buttons (@Drahy)
-- Optionally pause the current video while an add-on starts the next episode, so the end of the episode isn't missed during a slow source search (off by default) (@notoco)
-- Bring back an open popup that Kodi hid while the device was asleep (@Drahy)
-- Complete the Czech translation, including the add-on summary and description (@Drahy)
-- Update Polish translation (@notoco)
-
-### v1.3.5 (2026-11-03)
-- Continue a partly watched next library episode from where it was left, instead of from the start (setting on by default; idea from MoojMidge's fork) (@im85288)
-- Show the countdown in minutes and seconds when the popup opens more than a minute before it acts (e.g. from an add-on's or the credits' timing), and spread the simple popup's ring over the whole countdown, instead of showing no time until the last minute (@im85288)
-- Follow Kodi's "Show information for unwatched items" setting in the popup: hide the plot and/or picture of an unwatched next episode when Kodi hides them (@im85288)
-- Fall back to season art, or to add-on art without the tvshow. prefix, when the show has no fanart, landscape, poster, clearart or clearlogo (@im85288)
-
-### v1.3.4 (2026-11-03)
-- Update Simplified Chinese translation (@wabisabi926)
-
-### v1.3.3 (2026-11-02)
-- With "Enable on playlists" on, show the popup for videos that aren't library episodes when they play from a playlist with a next item, e.g. files started with "Play from here" (@im85288)
-- Mark a library episode as watched, and clear its resume point, when Watch Now or the credits delay moves on before Kodi counts it as watched (optional, on by default) (@im85288)
-- Read settings from one cached copy, reloaded when they change, instead of loading them from disk several times a second during playback (@im85288)
-- Allow notification times of up to 300 seconds before the end, for episodes with long credits (@notoco)
-- Update the Polish translation, and shorten labels that didn't fit in the settings dialog (@notoco)
-
-### v1.3.2 (2026-11-01)
-- Optionally ask whether playback should continue after a chosen amount of active viewing time or during the bedtime window, from the configured time until 06:00, at the next episode transition. Recheck limits while the next-episode popup is open and preserve the timer through sleep, including delayed sleep notifications. Time spent paused, buffering or seeking does not count; confirming the prompt resets the viewing timer and acknowledges bedtime for that night within the current playback session. Both options are disabled by default (@Drahy)
-
-### v1.3.1 (2026-11-01)
-- Optionally let OK/Select open Kodi's playback controls alongside the next-episode popup in both styles, including existing skin overrides. Arrow navigation enters its normal buttons, and Up returns to playback-control focus. Restore a popup hidden by Kodi after the playback controls close; preserve normal episode-end advancement, Stop, Back and Still Watching behavior (@Drahy)
-- Fix the popup not appearing for an episode an add-on starts with Player.play, when Kodi briefly reported it with the previous episode's position and duration (@im85288)
-- Update Simplified Chinese translation (@wabisabi926)
 
 ### v1.3.0 (2026-10-24)
 - Show a Skip intro / Skip recap button when an add-on marks those ranges in a new `skip_segments` field of `upnext_data`, with optional automatic skipping (@im85288)

@@ -9,8 +9,9 @@ more than once: each range is skipped on its own, never the gap between.
 Credits are left to the Up Next popup, which ``notification_offset`` times.
 """
 
+from platform import machine
 from xbmcgui import WindowXMLDialog
-from utils import addon_path, get_setting_bool, is_armv7, localize, log as ulog
+from utils import addon_path, get_setting_bool, localize, log as ulog
 
 SKIPPABLE = ('intro', 'recap')
 LABELS = {'intro': 30052, 'recap': 30053}
@@ -20,6 +21,7 @@ END_MARGIN = 1.0
 ACTION_NAV_BACK = 92
 ACTION_PREVIOUS_MENU = 10
 BUTTON = 3010
+OS_MACHINE = machine()
 
 
 def log(msg, level=2):
@@ -56,7 +58,7 @@ class SkipButton(WindowXMLDialog):
         self.on_skip = kwargs.pop('on_skip', None)
         self.label = kwargs.pop('label', '')
         self.dismissed = False
-        if is_armv7():
+        if OS_MACHINE[0:5] == 'armv7':
             WindowXMLDialog.__init__(self)
         else:
             WindowXMLDialog.__init__(self, *args, **kwargs)
