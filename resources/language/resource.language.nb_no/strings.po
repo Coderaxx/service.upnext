@@ -1,0 +1,313 @@
+# Service Up Next language file
+# Addon Name: Up Next
+# Addon id: service.upnext
+# Addon Provider: im85288
+msgid ""
+msgstr ""
+"Project-Id-Version: service.upnext\n"
+"Report-Msgid-Bugs-To: https://github.com/im85288/service.upnext\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2026-11-09 00:00+0000\n"
+"Last-Translator: Coderaxx\n"
+"Language-Team: Norwegian Bokmål\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: nb\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.8.7\n"
+
+### APPLICATION
+msgctxt "#30006"
+msgid "Watch Now"
+msgstr "Se nå"
+
+msgctxt "#30008"
+msgid "Up Next"
+msgstr "Up Next"
+
+msgctxt "#30009"
+msgid "Ends at: $INFO[Window.Property(endtime)]"
+msgstr "Slutter: $INFO[Window.Property(endtime)]"
+
+msgctxt "#30010"
+msgid "Continue watching"
+msgstr "Fortsett å se"
+
+msgctxt "#30024"
+msgid "Still there?"
+msgstr "Er du der fortsatt?"
+
+msgctxt "#30032"
+msgid "Enable on playlists"
+msgstr "Aktiver for spillelister"
+
+msgctxt "#30033"
+msgid "Stop"
+msgstr "Stopp"
+
+msgctxt "#30034"
+msgid "Close"
+msgstr "Lukk"
+
+msgctxt "#30035"
+msgid "Continue watching in [COLOR FFFF4081]$INFO[Window.Property(remaining)][/COLOR] seconds"
+msgstr "Fortsetter om [COLOR FFFF4081]$INFO[Window.Property(remaining)][/COLOR] sekunder"
+
+msgctxt "#30036"
+msgid "Up next in [COLOR FFFF4081]$INFO[Window.Property(remaining)][/COLOR] seconds"
+msgstr "Neste om [COLOR FFFF4081]$INFO[Window.Property(remaining)][/COLOR] sekunder"
+
+msgctxt "#30037"
+msgid "Next episode in [COLOR FFFF4081]$INFO[Window.Property(remaining)][/COLOR] seconds"
+msgstr "Neste episode om [COLOR FFFF4081]$INFO[Window.Property(remaining)][/COLOR] sekunder"
+
+msgctxt "#30038"
+msgid "Simple"
+msgstr "Enkel"
+
+msgctxt "#30039"
+msgid "Fancy"
+msgstr "Fancy"
+
+msgctxt "#30040"
+msgid "Play next"
+msgstr "Spill neste"
+
+msgctxt "#30041"
+msgid "Stop playing"
+msgstr "Stopp avspilling"
+
+msgctxt "#30042"
+msgid "None"
+msgstr "Ingen"
+
+msgctxt "#30043"
+msgid "Info"
+msgstr "Info"
+
+msgctxt "#30044"
+msgid "Debug"
+msgstr "Feilsøking"
+
+msgctxt "#30049"
+msgid "Next Episode"
+msgstr "Neste episode"
+
+msgctxt "#30050"
+msgid "Next episode in $INFO[Window.Property(credits_remaining)] s"
+msgstr "Neste episode om $INFO[Window.Property(credits_remaining)] s"
+
+msgctxt "#30051"
+msgid "Back: keep watching"
+msgstr "Tilbake: fortsett å se"
+
+msgctxt "#30052"
+msgid "Skip intro"
+msgstr "Hopp over intro"
+
+msgctxt "#30053"
+msgid "Skip recap"
+msgstr "Hopp over sammendrag"
+
+msgctxt "#30060"
+msgid "[B]UP NEXT DEMO MODE ENABLED[/B]"
+msgstr "[B]UP NEXT DEMOMODUS AKTIVERT[/B]"
+
+msgctxt "#30061"
+msgid "[I]Episodes automatically skip to end.[/I]"
+msgstr "[I]Episoder hopper automatisk til slutten.[/I]"
+
+msgctxt "#30063"
+msgid "Are you still watching?"
+msgstr "Ser du fortsatt på?"
+
+msgctxt "#30065"
+msgid "Exit"
+msgstr "Avslutt"
+
+msgctxt "#30067"
+msgid "Playback stops in [COLOR FFFF4081]$INFO[Window.Property(remaining)][/COLOR] seconds"
+msgstr "Avspillingen stopper om [COLOR FFFF4081]$INFO[Window.Property(remaining)][/COLOR] sekunder"
+
+
+### SETTINGS
+msgctxt "#30500"
+msgid "Interface"
+msgstr "Grensesnitt"
+
+msgctxt "#30501"
+msgid "Features"
+msgstr "Funksjoner"
+
+msgctxt "#30503"
+msgid "Set the display mode for the notifications"
+msgstr "Visningsmodus for varslene"
+
+msgctxt "#30505"
+msgid "Show a \"Stop\" button instead of a \"Close\" button"
+msgstr "Vis en «Stopp»-knapp i stedet for en «Lukk»-knapp"
+
+msgctxt "#30600"
+msgid "Behaviour"
+msgstr "Oppførsel"
+
+msgctxt "#30601"
+msgid "Features"
+msgstr "Funksjoner"
+
+msgctxt "#30603"
+msgid "Default action when nothing selected"
+msgstr "Standardhandling når ingenting er valgt"
+
+msgctxt "#30605"
+msgid "Include already watched episodes"
+msgstr "Ta med episoder som allerede er sett"
+
+msgctxt "#30607"
+msgid "Number of episodes before \"Still there?\" query"
+msgstr "Antall episoder før «Er du der fortsatt?»"
+
+msgctxt "#30609"
+msgid "Duration in seconds for notification to be shown"
+msgstr "Hvor mange sekunder varselet vises"
+
+msgctxt "#30611"
+msgid "Customize autoplay duration by episode length"
+msgstr "Tilpass varigheten etter episodelengde"
+
+msgctxt "#30613"
+msgid "All episodes  [COLOR gray]any length[/COLOR]"
+msgstr "Alle episoder  [COLOR gray]uansett lengde[/COLOR]"
+
+msgctxt "#30615"
+msgid "Very short episodes  [COLOR gray]< 10 mins[/COLOR]"
+msgstr "Svært korte episoder  [COLOR gray]< 10 min[/COLOR]"
+
+msgctxt "#30617"
+msgid "Short episodes  [COLOR gray]> 10 mins[/COLOR]"
+msgstr "Korte episoder  [COLOR gray]> 10 min[/COLOR]"
+
+msgctxt "#30619"
+msgid "Medium episodes  [COLOR gray]> 20 mins[/COLOR]"
+msgstr "Middels lange episoder  [COLOR gray]> 20 min[/COLOR]"
+
+msgctxt "#30621"
+msgid "Long episodes  [COLOR gray]> 40 mins[/COLOR]"
+msgstr "Lange episoder  [COLOR gray]> 40 min[/COLOR]"
+
+msgctxt "#30623"
+msgid "Very long episodes  [COLOR gray]> 60 mins[/COLOR]"
+msgstr "Svært lange episoder  [COLOR gray]> 60 min[/COLOR]"
+
+msgctxt "#30625"
+msgid "Advance during credits after (seconds, 0 disables)"
+msgstr "Gå videre under rulleteksten etter (sekunder, 0 slår av)"
+
+msgctxt "#30627"
+msgid "Intros and recaps"
+msgstr "Intro og sammendrag"
+
+msgctxt "#30629"
+msgid "Show a Skip button when the add-on marks them"
+msgstr "Vis en «Hopp over»-knapp når tillegget markerer dem"
+
+msgctxt "#30631"
+msgid "Skip intros automatically"
+msgstr "Hopp over intro automatisk"
+
+msgctxt "#30633"
+msgid "Skip recaps automatically"
+msgstr "Hopp over sammendrag automatisk"
+
+msgctxt "#30637"
+msgid "Stop playback after this many seconds without an answer"
+msgstr "Stopp avspillingen etter så mange sekunder uten svar"
+
+msgctxt "#30639"
+msgid "Countdown in seconds before the next episode starts  [COLOR gray]0 = until the episode ends[/COLOR]"
+msgstr "Nedtelling i sekunder før neste episode starter  [COLOR gray]0 = til episoden slutter[/COLOR]"
+
+msgctxt "#30641"
+msgid "Chapter markers"
+msgstr "Kapittelmarkører"
+
+msgctxt "#30643"
+msgid "Use chapter markers to detect the credits  [COLOR gray]first choice, over the credits file and the times above[/COLOR]"
+msgstr "Bruk kapittelmarkører til å finne rulleteksten  [COLOR gray]førstevalg, foran rulletekstfilen og tidene over[/COLOR]"
+
+msgctxt "#30645"
+msgid "Chapter names that mean the credits  [COLOR gray]comma separated[/COLOR]"
+msgstr "Kapittelnavn som betyr rulletekst  [COLOR gray]kommaseparert[/COLOR]"
+
+msgctxt "#30655"
+msgid "Wait this many seconds after the chapter starts  [COLOR gray]chapters often start before the credits[/COLOR]"
+msgstr "Vent så mange sekunder etter at kapittelet starter  [COLOR gray]kapitler starter ofte før rulleteksten[/COLOR]"
+
+msgctxt "#30647"
+msgid "Continue with the next season when a season ends"
+msgstr "Fortsett med neste sesong når en sesong er ferdig"
+
+msgctxt "#30651"
+msgid "Credits file next to the video"
+msgstr "Rulletekstfil ved siden av videoen"
+
+msgctxt "#30653"
+msgid "Use <video name>.skipcredits.json when it exists  [COLOR gray]when the video has no credits chapter, over the times above[/COLOR]"
+msgstr "Bruk <videonavn>.skipcredits.json når den finnes  [COLOR gray]når videoen ikke har et rulletekstkapittel, foran tidene over[/COLOR]"
+
+msgctxt "#30649"
+msgid "Full-screen \"Are you still watching?\"  [COLOR gray]pauses playback and stops it when nobody answers[/COLOR]"
+msgstr "Fullskjerm «Ser du fortsatt på?»  [COLOR gray]pauser avspillingen og stopper den hvis ingen svarer[/COLOR]"
+
+msgctxt "#30700"
+msgid "Expert"
+msgstr "Ekspert"
+
+msgctxt "#30703"
+msgid "Disable Up Next"
+msgstr "Slå av Up Next"
+
+msgctxt "#30705"
+msgid "Log level"
+msgstr "Loggnivå"
+
+msgctxt "#30800"
+msgid "Developer"
+msgstr "Utvikler"
+
+msgctxt "#30801"
+msgid "Test how the user interface looks"
+msgstr "Test hvordan brukergrensesnittet ser ut"
+
+msgctxt "#30803"
+msgid "Enable DEMO mode"
+msgstr "Aktiver DEMO-modus"
+
+msgctxt "#30805"
+msgid "Show an UpNext pop-up…"
+msgstr "Vis en UpNext-popup…"
+
+msgctxt "#30807"
+msgid "Show an UpNextSimple pop-up…"
+msgstr "Vis en UpNextSimple-popup…"
+
+msgctxt "#30809"
+msgid "Show a StillWatching pop-up…"
+msgstr "Vis en StillWatching-popup…"
+
+msgctxt "#30811"
+msgid "Show a StillWatchingSimple pop-up…"
+msgstr "Vis en StillWatchingSimple-popup…"
+
+msgctxt "#30813"
+msgid "Test Skip button"
+msgstr "Test «Hopp over»-knappen"
+
+msgctxt "#30815"
+msgid "Show a full-screen StillWatching pop-up…"
+msgstr "Vis en StillWatching-popup i fullskjerm…"
+
+msgctxt "#30817"
+msgid "Show a full-screen StillWatchingSimple pop-up…"
+msgstr "Vis en StillWatchingSimple-popup i fullskjerm…"
