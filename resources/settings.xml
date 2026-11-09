@@ -3,25 +3,34 @@
     <category label="30500"> <!-- Interface -->
         <setting label="30503" type="enum" id="simpleMode" lvalues="30038|30039" default="1"/>
         <setting label="30505" type="bool" id="stopAfterClose" default="false"/>
+        <setting label="30507" type="bool" id="selectOpensPlaybackControls" default="false"/>
+        <setting label="30508" type="bool" id="seekWithArrows" default="false" enable="eq(-1,true)"/>
     </category>
     <category label="30600"> <!-- Behaviour -->
         <setting label="30603" type="enum" id="autoPlayMode" lvalues="30040|30041" default="0"/>
         <setting label="30032" type="bool" id="enablePlaylist" default="false"/>
         <setting label="30605" type="bool" id="includeWatched" default="false"/>
-        <setting label="30647" type="bool" id="playNextSeason" default="true"/>
+        <setting label="30643" type="bool" id="markWatchedEarly" default="true"/>
+        <setting label="30645" type="bool" id="resumeNextEpisode" default="true"/>
+        <setting label="30647" type="bool" id="pauseUntilNext" default="false"/>
+        <setting label="30671" type="bool" id="playNextSeason" default="true"/>
         <setting label="30607" type="slider" id="playedInARow" default="3" range="0,1,15" option="int"/>
-        <setting label="30649" type="bool" id="stillWatchingFullscreen" default="false" subsetting="true" visible="gt(-1,0)"/>
-        <setting label="30637" type="slider" id="stillWatchingTimeout" default="30" range="5,5,120" option="int" subsetting="true" visible="gt(-2,0)+eq(-1,true)"/>
+        <setting label="30635" type="slider" id="stillWatchingMinutes" default="0" range="0,15,600" option="int"/>
+        <setting label="30637" type="bool" id="bedtimeEnabled" default="false"/>
+        <setting label="30639" type="slider" id="bedtimeHour" default="23" range="0,1,23" option="int" subsetting="true" visible="eq(-1,true)"/>
+        <setting label="30641" type="slider" id="bedtimeMinute" default="0" range="0,5,55" option="int" subsetting="true" visible="eq(-2,true)"/>
+        <setting label="30673" type="bool" id="stillWatchingFullscreen" default="false"/>
+        <setting label="30661" type="slider" id="stillWatchingTimeout" default="30" range="5,5,120" option="int" subsetting="true" visible="eq(-1,true)"/>
         <setting label="30609" type="lsep"/> <!-- Autoplay duration -->
         <setting label="30611" type="bool" id="customAutoPlayTime" default="true"/>
-        <setting label="30613" type="slider" id="autoPlaySeasonTime" default="30" range="0,5,120" option="int" subsetting="true" visible="eq(-1,false)"/>
-        <setting label="30615" type="slider" id="autoPlayTimeXS" default="15" range="0,5,120" option="int" subsetting="true" visible="eq(-2,true)"/>
-        <setting label="30617" type="slider" id="autoPlayTimeS" default="30" range="0,5,120" option="int" subsetting="true" visible="eq(-3,true)"/>
-        <setting label="30619" type="slider" id="autoPlayTimeM" default="40" range="0,5,120" option="int" subsetting="true" visible="eq(-4,true)"/>
-        <setting label="30621" type="slider" id="autoPlayTimeL" default="50" range="0,5,120" option="int" subsetting="true" visible="eq(-5,true)"/>
-        <setting label="30623" type="slider" id="autoPlayTimeXL" default="60" range="0,5,120" option="int" subsetting="true" visible="eq(-6,true)"/>
+        <setting label="30613" type="slider" id="autoPlaySeasonTime" default="30" range="0,5,300" option="int" subsetting="true" visible="eq(-1,false)"/>
+        <setting label="30615" type="slider" id="autoPlayTimeXS" default="15" range="0,5,300" option="int" subsetting="true" visible="eq(-2,true)"/>
+        <setting label="30617" type="slider" id="autoPlayTimeS" default="30" range="0,5,300" option="int" subsetting="true" visible="eq(-3,true)"/>
+        <setting label="30619" type="slider" id="autoPlayTimeM" default="40" range="0,5,300" option="int" subsetting="true" visible="eq(-4,true)"/>
+        <setting label="30621" type="slider" id="autoPlayTimeL" default="50" range="0,5,300" option="int" subsetting="true" visible="eq(-5,true)"/>
+        <setting label="30623" type="slider" id="autoPlayTimeXL" default="60" range="0,5,300" option="int" subsetting="true" visible="eq(-6,true)"/>
         <setting label="30625" type="slider" id="autoPlayCreditsTime" default="0" range="0,1,120" option="int"/>
-        <setting label="30639" type="lsep"/> <!-- Countdown before next episode starts -->
+        <setting label="30663" type="lsep"/> <!-- Countdown before next episode starts -->
         <setting label="30613" type="slider" id="autoPlayCountdownAll" default="10" range="0,1,60" option="int" subsetting="true" visible="eq(-9,false)"/>
         <setting label="30615" type="slider" id="autoPlayCountdownXS" default="5" range="0,1,60" option="int" subsetting="true" visible="eq(-10,true)"/>
         <setting label="30617" type="slider" id="autoPlayCountdownS" default="10" range="0,1,60" option="int" subsetting="true" visible="eq(-11,true)"/>
@@ -32,12 +41,12 @@
         <setting label="30629" type="bool" id="enableSkipSegments" default="true"/>
         <setting label="30631" type="bool" id="autoSkipIntro" default="false" subsetting="true" visible="eq(-1,true)"/>
         <setting label="30633" type="bool" id="autoSkipRecap" default="false" subsetting="true" visible="eq(-2,true)"/>
-        <setting label="30641" type="lsep"/> <!-- Chapter markers -->
-        <setting label="30643" type="bool" id="useChapters" default="true"/>
-        <setting label="30645" type="text" id="chapterKeywords" default="credits, outro" subsetting="true" visible="eq(-1,true)"/>
-        <setting label="30655" type="slider" id="chapterDelay" default="10" range="0,1,120" option="int" subsetting="true" visible="eq(-2,true)"/>
-        <setting label="30651" type="lsep"/> <!-- Skip credits file -->
-        <setting label="30653" type="bool" id="useSkipCreditsFile" default="true"/>
+        <setting label="30665" type="lsep"/> <!-- Chapter markers -->
+        <setting label="30667" type="bool" id="useChapters" default="true"/>
+        <setting label="30669" type="text" id="chapterKeywords" default="credits, outro" subsetting="true" visible="eq(-1,true)"/>
+        <setting label="30679" type="slider" id="chapterDelay" default="10" range="0,1,120" option="int" subsetting="true" visible="eq(-2,true)"/>
+        <setting label="30675" type="lsep"/> <!-- Skip credits file -->
+        <setting label="30677" type="bool" id="useSkipCreditsFile" default="true"/>
     </category>
     <category label="30700"> <!-- Expert -->
         <setting label="30703" type="bool" id="disableNextUp" default="false"/>

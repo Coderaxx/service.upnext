@@ -10,10 +10,10 @@ msgstr ""
 "PO-Revision-Date: 2026-11-09 00:00+0000\n"
 "Last-Translator: Coderaxx\n"
 "Language-Team: Norwegian Bokmål\n"
+"Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: nb\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.8.7\n"
 
@@ -110,6 +110,18 @@ msgctxt "#30053"
 msgid "Skip recap"
 msgstr "Hopp over sammendrag"
 
+msgctxt "#30054"
+msgid "Up next in [COLOR FFFF4081]$INFO[Window.Property(remaining_time)][/COLOR]"
+msgstr "Neste om [COLOR FFFF4081]$INFO[Window.Property(remaining_time)][/COLOR]"
+
+msgctxt "#30055"
+msgid "Next episode in [COLOR FFFF4081]$INFO[Window.Property(remaining_time)][/COLOR]"
+msgstr "Neste episode om [COLOR FFFF4081]$INFO[Window.Property(remaining_time)][/COLOR]"
+
+msgctxt "#30056"
+msgid "Continue watching in [COLOR FFFF4081]$INFO[Window.Property(remaining_time)][/COLOR]"
+msgstr "Fortsetter om [COLOR FFFF4081]$INFO[Window.Property(remaining_time)][/COLOR]"
+
 msgctxt "#30060"
 msgid "[B]UP NEXT DEMO MODE ENABLED[/B]"
 msgstr "[B]UP NEXT DEMOMODUS AKTIVERT[/B]"
@@ -130,7 +142,6 @@ msgctxt "#30067"
 msgid "Playback stops in [COLOR FFFF4081]$INFO[Window.Property(remaining)][/COLOR] seconds"
 msgstr "Avspillingen stopper om [COLOR FFFF4081]$INFO[Window.Property(remaining)][/COLOR] sekunder"
 
-
 ### SETTINGS
 msgctxt "#30500"
 msgid "Interface"
@@ -147,6 +158,14 @@ msgstr "Visningsmodus for varslene"
 msgctxt "#30505"
 msgid "Show a \"Stop\" button instead of a \"Close\" button"
 msgstr "Vis en «Stopp»-knapp i stedet for en «Lukk»-knapp"
+
+msgctxt "#30507"
+msgid "Use OK/Select for playback controls"
+msgstr "Bruk OK/Velg for avspillingskontroller"
+
+msgctxt "#30508"
+msgid "Use arrows to seek; hold OK for Up Next buttons"
+msgstr "Bruk piltastene til å spole; hold OK for Up Next-knappene"
 
 msgctxt "#30600"
 msgid "Behaviour"
@@ -220,43 +239,71 @@ msgctxt "#30633"
 msgid "Skip recaps automatically"
 msgstr "Hopp over sammendrag automatisk"
 
+msgctxt "#30635"
+msgid "Ask if still watching after (minutes, 0 disables)"
+msgstr "Spør om du fortsatt ser på etter (minutter, 0 slår av)"
+
 msgctxt "#30637"
+msgid "Ask if still watching after bedtime"
+msgstr "Spør om du fortsatt ser på etter leggetid"
+
+msgctxt "#30639"
+msgid "Bedtime hour"
+msgstr "Leggetid, time"
+
+msgctxt "#30641"
+msgid "Bedtime minute"
+msgstr "Leggetid, minutt"
+
+msgctxt "#30643"
+msgid "Mark an episode as watched when moving to the next one early"
+msgstr "Marker en episode som sett når du går videre før den er ferdig"
+
+msgctxt "#30645"
+msgid "Continue a partly watched next episode where it was left"
+msgstr "Fortsett en delvis sett neste episode der du slapp"
+
+msgctxt "#30647"
+msgid "Pause the video while an add-on starts the next episode"
+msgstr "Pause videoen mens et tillegg starter neste episode"
+
+msgctxt "#30661"
 msgid "Stop playback after this many seconds without an answer"
 msgstr "Stopp avspillingen etter så mange sekunder uten svar"
 
-msgctxt "#30639"
+msgctxt "#30663"
 msgid "Countdown in seconds before the next episode starts  [COLOR gray]0 = until the episode ends[/COLOR]"
 msgstr "Nedtelling i sekunder før neste episode starter  [COLOR gray]0 = til episoden slutter[/COLOR]"
 
-msgctxt "#30641"
+msgctxt "#30665"
 msgid "Chapter markers"
 msgstr "Kapittelmarkører"
 
-msgctxt "#30643"
+msgctxt "#30667"
 msgid "Use chapter markers to detect the credits  [COLOR gray]first choice, over the credits file and the times above[/COLOR]"
 msgstr "Bruk kapittelmarkører til å finne rulleteksten  [COLOR gray]førstevalg, foran rulletekstfilen og tidene over[/COLOR]"
 
-msgctxt "#30645"
+msgctxt "#30669"
 msgid "Chapter names that mean the credits  [COLOR gray]comma separated[/COLOR]"
 msgstr "Kapittelnavn som betyr rulletekst  [COLOR gray]kommaseparert[/COLOR]"
 
-msgctxt "#30655"
+msgctxt "#30679"
 msgid "Wait this many seconds after the chapter starts  [COLOR gray]chapters often start before the credits[/COLOR]"
 msgstr "Vent så mange sekunder etter at kapittelet starter  [COLOR gray]kapitler starter ofte før rulleteksten[/COLOR]"
 
-msgctxt "#30647"
+msgctxt "#30671"
 msgid "Continue with the next season when a season ends"
 msgstr "Fortsett med neste sesong når en sesong er ferdig"
 
-msgctxt "#30651"
+msgctxt "#30675"
 msgid "Credits file next to the video"
 msgstr "Rulletekstfil ved siden av videoen"
 
-msgctxt "#30653"
+msgctxt "#30677"
 msgid "Use <video name>.skipcredits.json when it exists  [COLOR gray]when the video has no credits chapter, over the times above[/COLOR]"
 msgstr "Bruk <videonavn>.skipcredits.json når den finnes  [COLOR gray]når videoen ikke har et rulletekstkapittel, foran tidene over[/COLOR]"
 
-msgctxt "#30649"
+msgctxt "#30673"
 msgid "Full-screen \"Are you still watching?\"  [COLOR gray]pauses playback and stops it when nobody answers[/COLOR]"
 msgstr "Fullskjerm «Ser du fortsatt på?»  [COLOR gray]pauser avspillingen og stopper den hvis ingen svarer[/COLOR]"
 
