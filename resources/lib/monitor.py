@@ -4,13 +4,13 @@
 from copy import deepcopy
 from traceback import format_exc
 from xbmc import Monitor
-from api import Api, credits_chapter
+from api import Api, countdown_time, credits_chapter
 from playbackmanager import PlaybackManager
 from player import UpNextPlayer
 from popup import close_leftover_popups
 from sidecar import load_credits_start
 from skip import Skipper
-from utils import clear_property, decode_json, get_property, get_setting_bool, log as ulog
+from utils import clear_property, decode_json, get_property, get_setting_bool, get_setting_int, log as ulog
 
 
 class UpNextMonitor(Monitor):
@@ -29,6 +29,7 @@ class UpNextMonitor(Monitor):
         self._waiting_for = None
         self._sidecar_file = None
         self._sidecar_start = None
+        self._chapter_seen = None
 
     def log(self, msg, level=1):
         """Log wrapper"""
@@ -49,6 +50,7 @@ class UpNextMonitor(Monitor):
             if not self.player.is_tracking():
                 self._waiting_for = None
                 self._sidecar_file = None
+                self._chapter_seen = None
                 self.skipper.reset()
                 continue
 
@@ -154,12 +156,45 @@ class UpNextMonitor(Monitor):
 
         chapter = credits_chapter(play_time=play_time, total_time=total_time)
         if chapter:
-            return 'chapter "%s" started, episode ends in %d secs' % (chapter, total_time - play_time)
+            return self.chapter_trigger(current_file, chapter, play_time, total_time)
+        self._chapter_seen = None
 
         notification_time = self.api.notification_time(total_time=total_time)
         if total_time - play_time > notification_time:
             return None
         return 'episode (of length %d secs) ends in %d secs' % (total_time, notification_time)
+
+    def chapter_trigger(self, current_file, chapter, play_time, total_time):
+        """Wait the configured delay after a credits chapter starts, chapter markers are often a bit early
+
+        Kodi does not tell when the chapter starts, so the delay counts from when playback was first seen in it.
+        The delay follows the play time, so pausing during the credits also pauses the delay.
+        """
+        seen = self._chapter_seen
+        if not seen or seen[0] != current_file or seen[1] != chapter or play_time < seen[2]:
+            # Entered the chapter now, or seeked back to before where it was first seen
+            seen = self._chapter_seen = (current_file, chapter, play_time)
+            first_seen = True
+        else:
+            first_seen = False
+        chapter_start = seen[2]
+
+        delay = max(get_setting_int('chapterDelay', 0) or 0, 0)
+        trigger_time = chapter_start + delay
+        if delay:
+            # Never wait so long that the popup no longer has time for its countdown before the episode ends
+            latest = total_time - max(countdown_time(total_time) or 0, 5)
+            trigger_time = max(chapter_start, min(trigger_time, latest))
+        if play_time < trigger_time:
+            if first_seen:
+                self.log('Chapter "%s" started, waiting %d secs before showing the popup'
+                         % (chapter, trigger_time - chapter_start), 2)
+            return None
+
+        if delay:
+            return 'chapter "%s" started %d secs ago, episode ends in %d secs' % (
+                chapter, play_time - chapter_start, total_time - play_time)
+        return 'chapter "%s" started, episode ends in %d secs' % (chapter, total_time - play_time)
 
     def credits_start_from_file(self, current_file, total_time):
         """When the credits start according to the sidecar file, looked up once for every playback"""
@@ -242,6 +277,7 @@ class UpNextMonitor(Monitor):
             return
         if method == 'Player.OnStop':
             self._waiting_for = None
+            self._chapter_seen = None
             self.skipper.reset()
             if not self._sleep_state:
                 self._playback_state = None

@@ -240,6 +240,10 @@ msgctxt "#30645"
 msgid "Chapter names that mean the credits  [COLOR gray]comma separated[/COLOR]"
 msgstr ""
 
+msgctxt "#30655"
+msgid "Wait this many seconds after the chapter starts  [COLOR gray]chapters often start before the credits[/COLOR]"
+msgstr ""
+
 msgctxt "#30647"
 msgid "Continue with the next season when a season ends"
 msgstr ""

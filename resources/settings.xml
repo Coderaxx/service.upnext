@@ -35,6 +35,7 @@
         <setting label="30641" type="lsep"/> <!-- Chapter markers -->
         <setting label="30643" type="bool" id="useChapters" default="true"/>
         <setting label="30645" type="text" id="chapterKeywords" default="credits, outro" subsetting="true" visible="eq(-1,true)"/>
+        <setting label="30655" type="slider" id="chapterDelay" default="10" range="0,1,120" option="int" subsetting="true" visible="eq(-2,true)"/>
         <setting label="30651" type="lsep"/> <!-- Skip credits file -->
         <setting label="30653" type="bool" id="useSkipCreditsFile" default="true"/>
     </category>
