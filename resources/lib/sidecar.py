@@ -7,6 +7,7 @@ Example: "The Rookie - S01E01.mkv" is accompanied by "The Rookie - S01E01.skipcr
     {"credits": {"start": 2399.5, "end": 2700.0}}
 
 Only credits.start is used. Anything else in the file (intro, skiptro, ...) is ignored.
+It is only used when the video has no credits chapter, see monitor.credits_trigger().
 """
 
 import json

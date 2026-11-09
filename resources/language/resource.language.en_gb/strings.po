@@ -233,7 +233,7 @@ msgid "Chapter markers"
 msgstr ""
 
 msgctxt "#30643"
-msgid "Use chapter markers to detect the credits  [COLOR gray]otherwise the times above are used[/COLOR]"
+msgid "Use chapter markers to detect the credits  [COLOR gray]first choice, over the credits file and the times above[/COLOR]"
 msgstr ""
 
 msgctxt "#30645"
@@ -253,7 +253,7 @@ msgid "Credits file next to the video"
 msgstr ""
 
 msgctxt "#30653"
-msgid "Use <video name>.skipcredits.json when it exists  [COLOR gray]first choice, over chapters and the times above[/COLOR]"
+msgid "Use <video name>.skipcredits.json when it exists  [COLOR gray]when the video has no credits chapter, over the times above[/COLOR]"
 msgstr ""
 
 msgctxt "#30649"
